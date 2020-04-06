@@ -151,15 +151,19 @@ def runonce(t, k, v):
 
     desiredInter = math.ceil(sigma / (v ** t)) - 1
 
+    keepincreasing = False;
+
     while sigma > 0:
         timeout = time.time() + 5
         # get interactions
         currentInter = 0
-        desiredInter = desiredInter + 1
+        if(keepincreasing == False):
+            desiredInter = desiredInter + 1
         print("Current desired Interaction is: " + str(desiredInter))
         while (currentInter < desiredInter):
             if time.time() > timeout:
                 desiredInter = desiredInter - 1
+                keepincreasing = True
 
             currentInter = 0
             tempRow = exhArr[random.randint(0, len(exhArr) - 1)]
