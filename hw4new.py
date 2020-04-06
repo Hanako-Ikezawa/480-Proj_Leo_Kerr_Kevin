@@ -193,6 +193,7 @@ def runonce(t,k,v):
 def main():
         #Q1
     inarr = input("Enter t,k,v, seperated by a comma: ").split(",")
+    #print(inarr)
     t = inarr[0]
     k = inarr[1]
     v = inarr[2]
