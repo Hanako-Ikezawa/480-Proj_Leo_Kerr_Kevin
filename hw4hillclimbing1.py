@@ -149,7 +149,9 @@ def runonce(t,k,v):
     #a row of all 0s gets takes care of as many combinations
     #as we have possible row combinations
     N = 1
-    
+
+    diffDesiredInter = []
+
     while sigma > 0:
 
         #get interactions
@@ -159,10 +161,12 @@ def runonce(t,k,v):
         traillimit = 5
         currenttrail = 0
         previousRow = []
+        havePreviousRow = False
+        targetinteraction = 0
 
         while currentInter < desiredInter:
             #if we have enough, update the hashmap
-            if currenttrail > traillimit:
+            if currenttrail > traillimit and havePreviousRow == True:
                 for colcom in colcombo:
                     valpair = []
                     for i in colcom:
@@ -172,8 +176,8 @@ def runonce(t,k,v):
                     #print(valkey)
                     if(allInt[str(colcom)][valkey] == 0):
                         allInt[str(colcom)][valkey]+=1
+                break
 
-            currentInter = 0
             tempRow = exhArr[random.randint(0,len(exhArr)-1)]
 
             #count new interactions in row
@@ -187,24 +191,27 @@ def runonce(t,k,v):
                 if(allInt[str(colcom)][valkey] == 0):
                     currentInter+=1
 
-            if(currentInter >= desiredInter):
+            if(currentInter > desiredInter):
                 desiredInter += 1
                 previousRow = tempRow
-                pass
+                targetinteraction = currentInter
+                havePreviousRow = True
+                currentInter = 0
             else:
                 currenttrail += 1
+                currentInter = 0
 
 
 
-
-        sigma -= currentInter
-        randomMCA.append(tempRow)
-        exhArr.remove(tempRow)
+        sigma -= targetinteraction
+        randomMCA.append(previousRow)
+        exhArr.remove(previousRow)
         N+=1
+        diffDesiredInter.append(targetinteraction - math.ceil(sigma / (v ** t)))
         
     #print(randomMCA)
     #print(N)
-    return N
+    return N, diffDesiredInter
             
 def main():
         #Q1
@@ -214,38 +221,42 @@ def main():
     k = inarr[1]
     v = inarr[2]
 
-    num = (input("Enter a number of trials: "))
+    N, diff = runonce(t,k,v)
 
-    if(num == ""):
-        num = 10
-    else:
-        num = int(num)
-    totalN = 0
-    NValues = []
-    ct = {}
-    
-    for i in range(num):
-        currN = runonce(t,k,v)
-        totalN+=currN
-        NValues.append(currN)
-        
-        if(currN not in ct):
-            ct[currN] = 1
-        else:
-            ct[currN] += 1
-
-    NValues.sort()
-    CountN = []
-    for val in NValues:
-        CountN.append(ct[val])
-
-    titleS = "Average N for "+str(num)+ " trials at t: "+t+" k: "+k+" v: "+v+" avg: "+str(round(totalN/num,3))
-    plt.title(titleS)
-    plt.plot(NValues, CountN)
-    plt.show()
-    
-    print("Here are t:", t,"k:", k, "v:", v)
-    print("Average", round(totalN/num,3))
+    print(N)
+    print(diff)
+    # num = (input("Enter a number of trials: "))
+    #
+    # if(num == ""):
+    #     num = 10
+    # else:
+    #     num = int(num)
+    # totalN = 0
+    # NValues = []
+    # ct = {}
+    #
+    # for i in range(num):
+    #     currN = runonce(t,k,v)
+    #     totalN+=currN
+    #     NValues.append(currN)
+    #
+    #     if(currN not in ct):
+    #         ct[currN] = 1
+    #     else:
+    #         ct[currN] += 1
+    #
+    # NValues.sort()
+    # CountN = []
+    # for val in NValues:
+    #     CountN.append(ct[val])
+    #
+    # titleS = "Average N for "+str(num)+ " trials at t: "+t+" k: "+k+" v: "+v+" avg: "+str(round(totalN/num,3))
+    # plt.title(titleS)
+    # plt.plot(NValues, CountN)
+    # plt.show()
+    #
+    # print("Here are t:", t,"k:", k, "v:", v)
+    # print("Average", round(totalN/num,3))
     
 main()
 
