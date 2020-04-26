@@ -221,6 +221,9 @@ def runonce(t,k,v):
                 break
 
             elif(rerollInter > currentInter):
+                interaDiff += rerollInter-currentInter
+                improvedRow +=1
+                
                 for colcom in colcombo:
                     valpair = []
                     for i in colcom:
@@ -232,9 +235,6 @@ def runonce(t,k,v):
                         allInt[str(colcom)][valkey]+=1
                 break
             innerTrials-=1
-
-        interaDiff += rerollInter-currentInter
-        improvedRow +=1
 
         sigma -= rerollInter
         randomMCA.append(newTempRow)
