@@ -168,7 +168,7 @@ def runonce(t,k,v):
         desiredInter = math.ceil(sigma/(v**t))
         #Attempt to reroll AFTER obtaining a row >= average random intera and try to improve
         rerollInter = 0
-        innerTrials = 50
+        innerTrials = 20
 
         interaDiff = 0
         improvedRow = 0
@@ -190,7 +190,7 @@ def runonce(t,k,v):
             if(currentInter >= desiredInter):
                 break
 
-        while (innerTrials>0):
+        while (innerTrials>=0):
             rerollInter = 0
             newTempRow = exhArr[random.randint(0,len(exhArr)-1)]
             #count new interactions in new new row
@@ -204,8 +204,8 @@ def runonce(t,k,v):
                 if(newAllInt[str(colcom)][newValkey] == 0):
                     rerollInter+=1
 
-            #Use old if we reach limit, doesn't reach
-            if(innerTrials == 0):
+            #Use old if we reach limit
+            if(rerollInter <= currentInter and innerTrials == 0):
                 rerollInter = currentInter
                 newTempRow = tempRow
 
@@ -218,11 +218,12 @@ def runonce(t,k,v):
 
                     if(allInt[str(colcom)][valkey] == 0):
                         allInt[str(colcom)][valkey]+=1
-                break
 
             elif(rerollInter > currentInter):
                 interaDiff += rerollInter-currentInter
                 improvedRow +=1
+                
+                currentInter = rerollInter
                 
                 for colcom in colcombo:
                     valpair = []
@@ -233,7 +234,7 @@ def runonce(t,k,v):
 
                     if(allInt[str(colcom)][valkey] == 0):
                         allInt[str(colcom)][valkey]+=1
-                break
+                        
             innerTrials-=1
 
         sigma -= rerollInter
