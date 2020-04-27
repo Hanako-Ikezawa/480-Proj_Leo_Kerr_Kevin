@@ -191,7 +191,7 @@ def runonce(t,k,v):
                 if(allInt[str(colcom)][valkey] == 0):
                     currentInter+=1
 
-            if(currentInter > desiredInter):
+            if(currentInter >= desiredInter):
                 desiredInter += 1
                 previousRow = tempRow
                 targetinteraction = currentInter
@@ -200,8 +200,6 @@ def runonce(t,k,v):
             else:
                 currenttrail += 1
                 currentInter = 0
-
-
 
         sigma -= targetinteraction
         randomMCA.append(previousRow)
@@ -225,6 +223,7 @@ def main():
 
     print(N)
     print(diff)
+
     # num = (input("Enter a number of trials: "))
     #
     # if(num == ""):
