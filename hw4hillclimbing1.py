@@ -2,6 +2,8 @@ import random
 import itertools
 import math
 import matplotlib.pyplot as plt
+import numpy as np
+
 
 def MCA(t, k, v, printable):
     '''
@@ -219,43 +221,18 @@ def main():
     k = inarr[1]
     v = inarr[2]
 
-    N, diff = runonce(t,k,v)
+    num = (input("Enter a number of trials: "))
+    num = int(num)
+    for i in range(num):
+        N, diff = runonce(t, k, v)
+        print(N)
+        print(diff)
+        trail = range(1, N)
+        plt.plot(trail, diff)
 
-    print(N)
-    print(diff)
+    titleS = "Hill-climbing " + str(num) + " trials at t: " + t + " k: " + k + " v: " + v + " avg: " + str(round(num))
+    plt.title(titleS)
+    plt.show()
 
-    # num = (input("Enter a number of trials: "))
-    #
-    # if(num == ""):
-    #     num = 10
-    # else:
-    #     num = int(num)
-    # totalN = 0
-    # NValues = []
-    # ct = {}
-    #
-    # for i in range(num):
-    #     currN = runonce(t,k,v)
-    #     totalN+=currN
-    #     NValues.append(currN)
-    #
-    #     if(currN not in ct):
-    #         ct[currN] = 1
-    #     else:
-    #         ct[currN] += 1
-    #
-    # NValues.sort()
-    # CountN = []
-    # for val in NValues:
-    #     CountN.append(ct[val])
-    #
-    # titleS = "Average N for "+str(num)+ " trials at t: "+t+" k: "+k+" v: "+v+" avg: "+str(round(totalN/num,3))
-    # plt.title(titleS)
-    # plt.plot(NValues, CountN)
-    # plt.show()
-    #
-    # print("Here are t:", t,"k:", k, "v:", v)
-    # print("Average", round(totalN/num,3))
-    
+
 main()
-
