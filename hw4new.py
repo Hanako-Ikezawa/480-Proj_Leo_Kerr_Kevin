@@ -2,6 +2,7 @@ import random
 import itertools
 import math
 import matplotlib.pyplot as plt
+from datetime import datetime
 
 def MCA(t, k, v, printable):
     '''
@@ -11,7 +12,7 @@ def MCA(t, k, v, printable):
     int, int, int -> void
     '''
     allrows = []
-    
+
     t = int(t)
     k = int(k)
     v = int(v)
@@ -82,9 +83,9 @@ def valueCombos(v, t):
         singlerow = numToRow(i,v,t)
         allrows.append(singlerow)
     return allrows
-    
 
-    
+
+
 def runonce(t,k,v):
 
 
@@ -100,7 +101,7 @@ def runonce(t,k,v):
 
 
     randomMCA = []
-    
+
     t = int(t)
     k = int(k)
     v = int(v)
@@ -115,7 +116,7 @@ def runonce(t,k,v):
     #all the possible value combos
     values = valueCombos(v, t)
     #print(values)
-    
+
     #build outer dictionary, column combos as keys,
     #values are dictionaries with value pairs as keys and counts as values
     allInt = {}
@@ -149,7 +150,7 @@ def runonce(t,k,v):
     #a row of all 0s gets takes care of as many combinations
     #as we have possible row combinations
     N = 1
-    
+
     while sigma > 0:
 
         #get interactions
@@ -185,103 +186,127 @@ def runonce(t,k,v):
         randomMCA.append(tempRow)
         exhArr.remove(tempRow)
         N+=1
-        
+
     #print(randomMCA)
     #print(N)
     return N
-            
+
 def suite(t, k, v, trials):
 
 
     num = int(trials)
-    
+
     totalN = 0
     NValues = []
     ct = {}
-    
+
+    completionTimes = []
+
     for i in range(num):
+
+        startTS = datetime.timestamp(datetime.now())
         currN = runonce(t,k,v)
+        endTS = datetime.timestamp(datetime.now())
         totalN+=currN
         NValues.append(currN)
-        
+        #print("Finished in",endTS-startTS,"seconds")
+        completionTimes.append(endTS-startTS)
+
         if(currN not in ct):
             ct[currN] = 1
         else:
             ct[currN] += 1
 
     NValues.sort()
+
+    RealNValues = list(ct.keys())
+    RealNValues.sort()
     CountN = []
-    for val in NValues:
+    for val in RealNValues:
         CountN.append(ct[val])
 
     #titleS = "Average N for "+str(num)+ " trials at t: "+t+" k: "+k+" v: "+v+" avg: "+str(round(totalN/num,3))
     #plt.title(titleS)
     #plt.plot(NValues, CountN)
     #plt.show()
-    
+
     #print("Here are t:", t,"k:", k, "v:", v)
     #print("Average", round(totalN/num,3))
-
-    return [NValues, CountN]
+    # print(RealNValues)
+    # print(CountN)
+    print("Average completion time = ",sum(completionTimes)/len(completionTimes))
+    return [RealNValues, CountN]
 
 
 
 
 def main():
-            #Q1
-    inarr = input("Enter beginning t,k,v, seperated by a comma: ").split(",")
-    t1 = inarr[0]
-    k1 = inarr[1]
-    v1 = inarr[2]
 
-    inarr = input("Enter ending t,k,v, seperated by a comma: ").split(",")
-    t2 = inarr[0]
-    k2 = inarr[1]
-    v2 = inarr[2]
+    mode = input("Do you want to run a range of t, k, v? (Y/N): ")
+    if(mode.lower() == "y"):
+        inarr = input("Enter beginning t,k,v, seperated by a comma: ").split(",")
+        t1 = inarr[0]
+        k1 = inarr[1]
+        v1 = inarr[2]
 
-    num = (input("Enter a number of trials: "))
+        inarr = input("Enter ending t,k,v, seperated by a comma: ").split(",")
+        t2 = inarr[0]
+        k2 = inarr[1]
+        v2 = inarr[2]
 
-    #run through strengths
-    runs = []
-    if(t1 != t2):
-        for stren in range(int(t1),int(t2)+1):
-            runs.append(suite(stren,k1,v1,num))
+        num = (input("Enter a number of trials: "))
 
-        titleS = "Average N for "+str(num)+ " trials from CA("+t1,k1,v1+") to CA("+t2,k2,v2+")"
-        plt.title(titleS)
-        for run in runs:            
-            plt.plot(run[0],run[1])
-        plt.show()
+        #run through strengths
+        runs = []
+        if(t1 != t2):
+            for stren in range(int(t1),int(t2)+1):
+                runs.append(suite(stren,k1,v1,num))
 
-    #run through columns
-    elif(k1 != k2):
-        for col in range(int(k1),int(k2)+1):
-            runs.append(suite(t1,col,v1,num))
+            titleS = "Average N for "+str(num)+ " trials from CA("+t1+", "+k1+", "+v1+") to CA("+t2+", "+k2+", "+v2+")"
+            plt.title(titleS)
+            for run in runs:
+                plt.plot(run[0],run[1])
+            plt.show()
 
-        titleS = "Average N for "+str(num)+ " trials from CA("+t1,k1,v1+") to CA("+t2,k2,v2+")"
-        plt.title(titleS)
-        for run in runs:            
-            plt.plot(run[0],run[1])
-        plt.show()
-        
-    #run through values
-    elif(v1 != v2):
-        for val in range(int(v1),int(v2)+1):
-            runs.append(suite(t1,k1,val,num))
+        #run through columns
+        elif(k1 != k2):
+            for col in range(int(k1),int(k2)+1):
+                runs.append(suite(t1,col,v1,num))
 
-        titleS = "Average N for "+str(num)+ " trials from CA("+t1,k1,v1+") to CA("+t2,k2,v2+")"
-        plt.title(titleS)
-        for run in runs:            
-            plt.plot(run[0],run[1])
-        plt.show()
-        
+            titleS = "Average N for "+str(num)+ " trials from CA("+t1+", "+k1+", "+v1+") to CA("+t2+", "+k2+", "+v2+")"
+            plt.title(titleS)
+            for run in runs:
+                plt.plot(run[0],run[1])
+            plt.show()
+
+        #run through values
+        elif(v1 != v2):
+            for val in range(int(v1),int(v2)+1):
+                runs.append(suite(t1,k1,val,num))
+
+            titleS = "Average N for "+str(num)+ " trials from CA("+t1+", "+k1+", "+v1+") to CA("+t2+", "+k2+", "+v2+")"
+            plt.title(titleS)
+            for run in runs:
+                plt.plot(run[0],run[1])
+            plt.show()
+
+        else:
+            print("Can only vary one thing at once")
     else:
-        print("Can only vary one thing at once")
-        
-    
-  
+        inarr = input("Enter t,k,v, seperated by a comma: ").split(",")
+        t1 = inarr[0]
+        k1 = inarr[1]
+        v1 = inarr[2]
+
+        num = (input("Enter a number of trials: "))
+
+        runs = suite(t1,k1,v1,num)
+        #
+        titleS = "Average N for "+str(num)+ " trials for CA("+t1+", "+k1+", "+v1+")"
+        # print(runs)
+        plt.title(titleS)
+        plt.plot(runs[0],runs[1])
+        plt.show()
 
 
-    suite(t1,k1,v1,num)
 main()
-
