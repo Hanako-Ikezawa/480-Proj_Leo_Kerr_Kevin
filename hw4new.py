@@ -200,13 +200,14 @@ def runonce(t,k,v, mode):
     #as we have possible row combinations
     N = 1
 
+    ORIGINAL = 5
     while sigma > 0:
 
         #get interactions
         currentInter = 0
         desiredInter = math.ceil(sigma/(v**t))
 
-        breakpoint = 10
+        breakpoint = ORIGINAL
         lastbest = []
         bestInter = -1
 
@@ -234,7 +235,7 @@ def runonce(t,k,v, mode):
                 if(currentInter >= desiredInter):
                     lastbest = tempRow
                     bestInter = currentInter
-                    breakpoint = 10
+                    breakpoint = ORIGINAL
                     desiredInter = currentInter+1
 
                 elif(currentInter < desiredInter and lastbest != []):
@@ -333,6 +334,8 @@ def suite(t, k, v, trials, mode):
         startTS = datetime.timestamp(datetime.now())
         currN = runonce(t,k,v, mode)
         endTS = datetime.timestamp(datetime.now())
+        if(i == 0):
+            print("Predicted total runtime: ",(endTS-startTS)*num,"seconds")
         totalN+=currN
         NValues.append(currN)
         #print("Finished in",endTS-startTS,"seconds")
@@ -360,7 +363,7 @@ def suite(t, k, v, trials, mode):
     #print("Average", round(totalN/num,3))
     # print(RealNValues)
     # print(CountN)
-    
+
     print("Average completion time for",mode," = ",round(sum(completionTimes)/len(completionTimes),5))
     print("Average", round(totalN/num,3))
     return [RealNValues, CountN]
