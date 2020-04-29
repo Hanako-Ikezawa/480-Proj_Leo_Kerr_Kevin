@@ -190,20 +190,11 @@ def runonce(t,k,v):
     #print(N)
     return N
             
-def main():
-        #Q1
-    inarr = input("Enter t,k,v, seperated by a comma: ").split(",")
-    #print(inarr)
-    t = inarr[0]
-    k = inarr[1]
-    v = inarr[2]
+def suite(t, k, v, trials):
 
-    num = (input("Enter a number of trials: "))
 
-    if(num == ""):
-        num = 10
-    else:
-        num = int(num)
+    num = int(trials)
+    
     totalN = 0
     NValues = []
     ct = {}
@@ -223,13 +214,74 @@ def main():
     for val in NValues:
         CountN.append(ct[val])
 
-    titleS = "Average N for "+str(num)+ " trials at t: "+t+" k: "+k+" v: "+v+" avg: "+str(round(totalN/num,3))
-    plt.title(titleS)
-    plt.plot(NValues, CountN)
-    plt.show()
+    #titleS = "Average N for "+str(num)+ " trials at t: "+t+" k: "+k+" v: "+v+" avg: "+str(round(totalN/num,3))
+    #plt.title(titleS)
+    #plt.plot(NValues, CountN)
+    #plt.show()
     
-    print("Here are t:", t,"k:", k, "v:", v)
-    print("Average", round(totalN/num,3))
+    #print("Here are t:", t,"k:", k, "v:", v)
+    #print("Average", round(totalN/num,3))
+
+    return [NValues, CountN]
+
+
+
+
+def main():
+            #Q1
+    inarr = input("Enter beginning t,k,v, seperated by a comma: ").split(",")
+    t1 = inarr[0]
+    k1 = inarr[1]
+    v1 = inarr[2]
+
+    inarr = input("Enter ending t,k,v, seperated by a comma: ").split(",")
+    t2 = inarr[0]
+    k2 = inarr[1]
+    v2 = inarr[2]
+
+    num = (input("Enter a number of trials: "))
+
+    #run through strengths
+    runs = []
+    if(t1 != t2):
+        for stren in range(int(t1),int(t2)+1):
+            runs.append(suite(stren,k1,v1,num))
+
+        titleS = "Average N for "+str(num)+ " trials from CA("+t1,k1,v1+") to CA("+t2,k2,v2+")"
+        plt.title(titleS)
+        for run in runs:            
+            plt.plot(run[0],run[1])
+        plt.show()
+
+    #run through columns
+    elif(k1 != k2):
+        for col in range(int(k1),int(k2)+1):
+            runs.append(suite(t1,col,v1,num))
+
+        titleS = "Average N for "+str(num)+ " trials from CA("+t1,k1,v1+") to CA("+t2,k2,v2+")"
+        plt.title(titleS)
+        for run in runs:            
+            plt.plot(run[0],run[1])
+        plt.show()
+        
+    #run through values
+    elif(v1 != v2):
+        for val in range(int(v1),int(v2)+1):
+            runs.append(suite(t1,k1,val,num))
+
+        titleS = "Average N for "+str(num)+ " trials from CA("+t1,k1,v1+") to CA("+t2,k2,v2+")"
+        plt.title(titleS)
+        for run in runs:            
+            plt.plot(run[0],run[1])
+        plt.show()
+        
+    else:
+        print("Can only vary one thing at once")
+        
     
+  
+
+
+    suite(t1,k1,v1,num)
 main()
 
