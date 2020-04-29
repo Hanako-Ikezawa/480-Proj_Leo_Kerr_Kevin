@@ -360,7 +360,9 @@ def suite(t, k, v, trials, mode):
     #print("Average", round(totalN/num,3))
     # print(RealNValues)
     # print(CountN)
-    print("Average completion time = ",sum(completionTimes)/len(completionTimes))
+    
+    print("Average completion time for",mode," = ",round(sum(completionTimes)/len(completionTimes),5))
+    print("Average", round(totalN/num,3))
     return [RealNValues, CountN]
 
 
@@ -425,17 +427,39 @@ def main():
         k1 = inarr[1]
         v1 = inarr[2]
 
+        comp = input("Compare hill to normal? ")
+
         num = (input("Enter a number of trials: "))
-        mode = input("Enter a mode (normal/hill): ")
 
-        runs = suite(t1,k1,v1,num,mode)
 
-        #
-        titleS = "Average N for "+str(num)+ " trials for CA("+t1+", "+k1+", "+v1+")"
-        # print(runs)
-        plt.title(titleS)
-        plt.plot(runs[0],runs[1])
-        plt.show()
+
+        if comp.lower() == "n" or comp.lower() == "no":
+            mode = input("Enter a mode (normal/hill): ")
+            runs = suite(t1,k1,v1,num,mode)
+
+            #
+            titleS = "Average N for "+str(num)+ " trials for CA("+t1+", "+k1+", "+v1+")"
+            # print(runs)
+            plt.title(titleS)
+            plt.plot(runs[0],runs[1])
+            plt.show()
+
+        else:
+            hillRuns = suite(t1,k1,v1,num,'hill')
+            randomRuns = suite(t1,k1,v1,num,'normal')
+
+            #
+            titleS = "Average N for "+str(num)+ " trials for CA("+t1+", "+k1+", "+v1+") for HillClimbing and Random"
+            # print(runs)
+
+            plt.title(titleS)
+            hillLine, = plt.plot(hillRuns[0],hillRuns[1])
+            hillLine.set_label("HillClimbing")
+
+            randomLine, = plt.plot(randomRuns[0],randomRuns[1])
+            randomLine.set_label("Random")
+            plt.legend()
+            plt.show()
 
 
 main()
