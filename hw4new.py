@@ -86,7 +86,55 @@ def valueCombos(v, t):
 
 
 
-def runonce(t,k,v):
+def checkMCA(t,k,v, MCA):
+
+    isMCA = True
+    t = int(t)
+    k = int(k)
+    v = int(v)
+
+    colcombo = colCombos(k,t)
+    sigma = nCr(k,t)*(v**t)
+    values = valueCombos(v, t)
+
+
+    allInt = {}
+    for comb in colcombo:
+        key = str(comb)
+        #print(key)
+        innerDict = {}
+        for value in values:
+            valkey = str(value)
+            innerDict[valkey] = 0
+
+        allInt[key] = innerDict
+
+    #print("Before:",allInt)
+    for row in MCA:
+        for colcom in colcombo:
+            valpair = []
+            for i in colcom:
+                valpair.append(row[i])
+
+            valkey = str(valpair)
+            #print(valkey)
+            if(allInt[str(colcom)][valkey] == 0):
+                allInt[str(colcom)][valkey] += 1
+
+    for row in MCA:
+        for colcom in colcombo:
+            for valpair in values:
+                if(allInt[str(colcom)][str(valpair)] == 0):
+                    isMCA = False
+                    break
+
+    #print("After:",allInt)
+    if(isMCA):
+        pass
+    else:
+        print("WARNING RESULT FAILED: This is not an MCA")
+
+def runonce(t,k,v, mode):
 
 
     exhArr = MCA(t,k,v,"none")
@@ -98,7 +146,6 @@ def runonce(t,k,v):
     #    exhArr = MCA(t,k,v, "all")
     #else:
     #    exhArr = MCA(t,k,v,rows.split(","))
-
 
     randomMCA = []
 
@@ -130,6 +177,8 @@ def runonce(t,k,v):
 
         allInt[key] = innerDict
 
+
+
     #now we have a storage structure for interactions
     #print(allInt)
 
@@ -156,22 +205,18 @@ def runonce(t,k,v):
         #get interactions
         currentInter = 0
         desiredInter = math.ceil(sigma/(v**t))
-        while (currentInter < desiredInter):
-            currentInter = 0
-            tempRow = exhArr[random.randint(0,len(exhArr)-1)]
 
-            #count new interactions in row
-            for colcom in colcombo:
-                valpair = []
-                for i in colcom:
-                    valpair.append(tempRow[i])
+        breakpoint = 10
+        lastbest = []
+        bestInter = -1
 
-                valkey = str(valpair)
-                #print(valkey)
-                if(allInt[str(colcom)][valkey] == 0):
-                    currentInter+=1
-            #if we have enough, update the hashmap
-            if(currentInter >= desiredInter):
+        if(mode == "hill"):
+            while (currentInter < desiredInter):
+
+                currentInter = 0
+                tempRow = exhArr[random.randint(0,len(exhArr)-1)]
+
+                #count new interactions in row
                 for colcom in colcombo:
                     valpair = []
                     for i in colcom:
@@ -180,18 +225,99 @@ def runonce(t,k,v):
                     valkey = str(valpair)
                     #print(valkey)
                     if(allInt[str(colcom)][valkey] == 0):
-                        allInt[str(colcom)][valkey]+=1
+                        currentInter+=1
+                # print("Given row",tempRow)
+                # print("Breakpoint",breakpoint,"expected interactions", desiredInter,"current interactions",currentInter)
+                # input()
 
-        sigma -= currentInter
-        randomMCA.append(tempRow)
-        exhArr.remove(tempRow)
-        N+=1
+                #if we have enough, update the hashmap
+                if(currentInter >= desiredInter):
+                    lastbest = tempRow
+                    bestInter = currentInter
+                    breakpoint = 10
+                    desiredInter = currentInter+1
+
+                elif(currentInter < desiredInter and lastbest != []):
+                    if(breakpoint > 0):
+                        breakpoint-=1
+                    else:
+                        tempRow = lastbest
+
+                        for colcom in colcombo:
+                            valpair = []
+                            for i in colcom:
+                                valpair.append(tempRow[i])
+
+                            valkey = str(valpair)
+                            #print(valkey)
+                            if(allInt[str(colcom)][valkey] == 0):
+                                allInt[str(colcom)][valkey]+=1
+
+                        break
+
+                elif(currentInter < desiredInter and lastbest == []):
+                    pass
+            #print("Adding row",lastbest, "removing",bestInter,"interactions from sigma:",sigma)
+
+            testinter = 0
+            for colcom in colcombo:
+                valpair = []
+                for i in colcom:
+                    valpair.append(lastbest[i])
+
+                valkey = str(valpair)
+                #print(valkey)
+                if(allInt[str(colcom)][valkey] == 0):
+                    testinter+=1
+
+            #print("testinter",testinter,"bestinter",bestInter)
+
+            sigma -= bestInter
+            randomMCA.append(lastbest)
+            exhArr.remove(lastbest)
+            N+=1
+
+
+
+        else:
+            while (currentInter < desiredInter):
+                currentInter = 0
+                tempRow = exhArr[random.randint(0,len(exhArr)-1)]
+
+                #count new interactions in row
+                for colcom in colcombo:
+                    valpair = []
+                    for i in colcom:
+                        valpair.append(tempRow[i])
+
+                    valkey = str(valpair)
+                    #print(valkey)
+                    if(allInt[str(colcom)][valkey] == 0):
+                        currentInter+=1
+                #if we have enough, update the hashmap
+                if(currentInter >= desiredInter):
+                    for colcom in colcombo:
+                        valpair = []
+                        for i in colcom:
+                            valpair.append(tempRow[i])
+
+                        valkey = str(valpair)
+                        #print(valkey)
+                        if(allInt[str(colcom)][valkey] == 0):
+                            allInt[str(colcom)][valkey]+=1
+
+            #print("Adding row",tempRow)
+            sigma -= currentInter
+            randomMCA.append(tempRow)
+            exhArr.remove(tempRow)
+            N+=1
 
     #print(randomMCA)
     #print(N)
+    checkMCA(t,k,v, randomMCA)
     return N
 
-def suite(t, k, v, trials):
+def suite(t, k, v, trials, mode):
 
 
     num = int(trials)
@@ -205,7 +331,7 @@ def suite(t, k, v, trials):
     for i in range(num):
 
         startTS = datetime.timestamp(datetime.now())
-        currN = runonce(t,k,v)
+        currN = runonce(t,k,v, mode)
         endTS = datetime.timestamp(datetime.now())
         totalN+=currN
         NValues.append(currN)
@@ -255,12 +381,13 @@ def main():
         v2 = inarr[2]
 
         num = (input("Enter a number of trials: "))
+        mode = input("Enter a mode (normal/hill): ")
 
         #run through strengths
         runs = []
         if(t1 != t2):
             for stren in range(int(t1),int(t2)+1):
-                runs.append(suite(stren,k1,v1,num))
+                runs.append(suite(stren,k1,v1,num, mode))
 
             titleS = "Average N for "+str(num)+ " trials from CA("+t1+", "+k1+", "+v1+") to CA("+t2+", "+k2+", "+v2+")"
             plt.title(titleS)
@@ -271,7 +398,7 @@ def main():
         #run through columns
         elif(k1 != k2):
             for col in range(int(k1),int(k2)+1):
-                runs.append(suite(t1,col,v1,num))
+                runs.append(suite(t1,col,v1,num,mode))
 
             titleS = "Average N for "+str(num)+ " trials from CA("+t1+", "+k1+", "+v1+") to CA("+t2+", "+k2+", "+v2+")"
             plt.title(titleS)
@@ -282,7 +409,7 @@ def main():
         #run through values
         elif(v1 != v2):
             for val in range(int(v1),int(v2)+1):
-                runs.append(suite(t1,k1,val,num))
+                runs.append(suite(t1,k1,val,num,mode))
 
             titleS = "Average N for "+str(num)+ " trials from CA("+t1+", "+k1+", "+v1+") to CA("+t2+", "+k2+", "+v2+")"
             plt.title(titleS)
@@ -299,8 +426,10 @@ def main():
         v1 = inarr[2]
 
         num = (input("Enter a number of trials: "))
+        mode = input("Enter a mode (normal/hill): ")
 
-        runs = suite(t1,k1,v1,num)
+        runs = suite(t1,k1,v1,num,mode)
+
         #
         titleS = "Average N for "+str(num)+ " trials for CA("+t1+", "+k1+", "+v1+")"
         # print(runs)
