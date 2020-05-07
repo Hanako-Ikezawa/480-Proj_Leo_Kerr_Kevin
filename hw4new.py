@@ -200,7 +200,7 @@ def runonce(t,k,v, mode):
     #as we have possible row combinations
     N = 1
 
-    ORIGINAL = 5
+    ORIGINAL = 500
     while sigma > 0:
 
         #get interactions
