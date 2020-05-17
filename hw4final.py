@@ -6,7 +6,7 @@ import time
 from tqdm import tqdm
 import matplotlib.pyplot as plt
 from datetime import datetime
-from simanneal import Annealer
+
 
 def averageLists(lists):
     averageList = []
@@ -367,93 +367,93 @@ def main():
                         totalTimes.append(sum(time)/len(time))
                     file.write(""+str(t)+","+str(k)+","+str(v)+","+str(rerolls)+","+str(sum(totalRows)/len(totalRows))+","+str(sum(totalTimes)/len(totalTimes))+"\n")
 
-    # k = 10
-    # v = 2
-    # for t in [3,4,5,8]:
-    #     print("Running t,k,v",t,k,v)
-    #     for rerolls in [0,5,10,15,20,100,500, "dynamic"]:
-    #         if(rerolls != "dynamic"):
-    #             if rerolls < 100:
-    #                 totalRows = []
-    #                 totalTimes = []
-    #                 if(t < 5):
-    #                     for i in tqdm(range(25)):
-    #                         N,sigma,time,newRows = runonce(t,k,v,rerolls)
-    #                         totalRows.append(N)
-    #                         totalTimes.append(sum(time)/len(time))
-    #                     file.write(""+str(t)+","+str(k)+","+str(v)+","+str(rerolls)+","+str(sum(totalRows)/len(totalRows))+","+str(sum(totalTimes)/len(totalTimes))+"\n")
-    #                 else:
-    #                     for i in tqdm(range(10)):
-    #                         N,sigma,time,newRows = runonce(t,k,v,rerolls)
-    #                         totalRows.append(N)
-    #                         totalTimes.append(sum(time)/len(time))
-    #                     file.write(""+str(t)+","+str(k)+","+str(v)+","+str(rerolls)+","+str(sum(totalRows)/len(totalRows))+","+str(sum(totalTimes)/len(totalTimes))+"\n")
-    #             else:
-    #                 totalRows = []
-    #                 totalTimes = []
-    #                 if(t < 5):
-    #                     for i in tqdm(range(4)):
-    #                         N,sigma,time,newRows = runonce(t,k,v,rerolls)
-    #                         totalRows.append(N)
-    #                         totalTimes.append(sum(time)/len(time))
-    #                     file.write(""+str(t)+","+str(k)+","+str(v)+","+str(rerolls)+","+str(sum(totalRows)/len(totalRows))+","+str(sum(totalTimes)/len(totalTimes))+"\n")
-    #                 else:
-    #                     for i in tqdm(range(3)):
-    #                         N,sigma,time,newRows = runonce(t,k,v,rerolls)
-    #                         totalRows.append(N)
-    #                         totalTimes.append(sum(time)/len(time))
-    #                     file.write(""+str(t)+","+str(k)+","+str(v)+","+str(rerolls)+","+str(sum(totalRows)/len(totalRows))+","+str(sum(totalTimes)/len(totalTimes))+"\n")
-    #         else:
-    #             totalRows = []
-    #             totalTimes = []
-    #             if(t < 5):
-    #                 for i in tqdm(range(25)):
-    #                     N,sigma,time,newRows = runonce(t,k,v,500)
-    #                     totalRows.append(N)
-    #                     totalTimes.append(sum(time)/len(time))
-    #                 file.write(""+str(t)+","+str(k)+","+str(v)+","+str(rerolls)+","+str(sum(totalRows)/len(totalRows))+","+str(sum(totalTimes)/len(totalTimes))+"\n")
-    #             else:
-    #                 for i in tqdm(range(10)):
-    #                     N,sigma,time,newRows = runonce(t,k,v,500)
-    #                     totalRows.append(N)
-    #                     totalTimes.append(sum(time)/len(time))
-    #                 file.write(""+str(t)+","+str(k)+","+str(v)+","+str(rerolls)+","+str(sum(totalRows)/len(totalRows))+","+str(sum(totalTimes)/len(totalTimes))+"\n")
-    #
-    #
-    # t = 2
-    # k = 10
-    # for v in [3,4]:
-    #     print("Running t,k,v",t,k,v)
-    #     for rerolls in [0,5,10,15,20,100,500, "dynamic"]:
-    #         if(rerolls != "dynamic"):
-    #             if rerolls < 100:
-    #                 totalRows = []
-    #                 totalTimes = []
-    #
-    #                 for i in tqdm(range(50)):
-    #                     N,sigma,time,newRows = runonce(t,k,v,rerolls)
-    #                     totalRows.append(N)
-    #                     totalTimes.append(sum(time)/len(time))
-    #                 file.write(""+str(t)+","+str(k)+","+str(v)+","+str(rerolls)+","+str(sum(totalRows)/len(totalRows))+","+str(sum(totalTimes)/len(totalTimes))+"\n")
-    #
-    #             else:
-    #                 totalRows = []
-    #                 totalTimes = []
-    #                 for i in tqdm(range(10)):
-    #                     N,sigma,time,newRows = runonce(t,k,v,rerolls)
-    #                     totalRows.append(N)
-    #                     totalTimes.append(sum(time)/len(time))
-    #                 file.write(""+str(t)+","+str(k)+","+str(v)+","+str(rerolls)+","+str(sum(totalRows)/len(totalRows))+","+str(sum(totalTimes)/len(totalTimes))+"\n")
-    #
-    #         else:
-    #             totalRows = []
-    #             totalTimes = []
-    #
-    #             for i in tqdm(range(30)):
-    #                 N,sigma,time,newRows = runonce(t,k,v,500)
-    #                 totalRows.append(N)
-    #                 totalTimes.append(sum(time)/len(time))
-    #             file.write(""+str(t)+","+str(k)+","+str(v)+","+str(rerolls)+","+str(sum(totalRows)/len(totalRows))+","+str(sum(totalTimes)/len(totalTimes))+"\n")
+    k = 10
+    v = 2
+    for t in [3,4,5,8]:
+        print("Running t,k,v",t,k,v)
+        for rerolls in [0,5,10,15,20,100,500, "dynamic"]:
+            if(rerolls != "dynamic"):
+                if rerolls < 100:
+                    totalRows = []
+                    totalTimes = []
+                    if(t < 5):
+                        for i in tqdm(range(50)):
+                            N,sigma,time,newRows = runonce(t,k,v,rerolls)
+                            totalRows.append(N)
+                            totalTimes.append(sum(time)/len(time))
+                        file.write(""+str(t)+","+str(k)+","+str(v)+","+str(rerolls)+","+str(sum(totalRows)/len(totalRows))+","+str(sum(totalTimes)/len(totalTimes))+"\n")
+                    else:
+                        for i in tqdm(range(20)):
+                            N,sigma,time,newRows = runonce(t,k,v,rerolls)
+                            totalRows.append(N)
+                            totalTimes.append(sum(time)/len(time))
+                        file.write(""+str(t)+","+str(k)+","+str(v)+","+str(rerolls)+","+str(sum(totalRows)/len(totalRows))+","+str(sum(totalTimes)/len(totalTimes))+"\n")
+                else:
+                    totalRows = []
+                    totalTimes = []
+                    if(t < 5):
+                        for i in tqdm(range(8)):
+                            N,sigma,time,newRows = runonce(t,k,v,rerolls)
+                            totalRows.append(N)
+                            totalTimes.append(sum(time)/len(time))
+                        file.write(""+str(t)+","+str(k)+","+str(v)+","+str(rerolls)+","+str(sum(totalRows)/len(totalRows))+","+str(sum(totalTimes)/len(totalTimes))+"\n")
+                    else:
+                        for i in tqdm(range(3)):
+                            N,sigma,time,newRows = runonce(t,k,v,rerolls)
+                            totalRows.append(N)
+                            totalTimes.append(sum(time)/len(time))
+                        file.write(""+str(t)+","+str(k)+","+str(v)+","+str(rerolls)+","+str(sum(totalRows)/len(totalRows))+","+str(sum(totalTimes)/len(totalTimes))+"\n")
+            else:
+                totalRows = []
+                totalTimes = []
+                if(t < 5):
+                    for i in tqdm(range(50)):
+                        N,sigma,time,newRows = runonce(t,k,v,500)
+                        totalRows.append(N)
+                        totalTimes.append(sum(time)/len(time))
+                    file.write(""+str(t)+","+str(k)+","+str(v)+","+str(rerolls)+","+str(sum(totalRows)/len(totalRows))+","+str(sum(totalTimes)/len(totalTimes))+"\n")
+                else:
+                    for i in tqdm(range(25)):
+                        N,sigma,time,newRows = runonce(t,k,v,500)
+                        totalRows.append(N)
+                        totalTimes.append(sum(time)/len(time))
+                    file.write(""+str(t)+","+str(k)+","+str(v)+","+str(rerolls)+","+str(sum(totalRows)/len(totalRows))+","+str(sum(totalTimes)/len(totalTimes))+"\n")
+
+
+    t = 2
+    k = 10
+    for v in [3,4]:
+        print("Running t,k,v",t,k,v)
+        for rerolls in [0,5,10,15,20,100,500, "dynamic"]:
+            if(rerolls != "dynamic"):
+                if rerolls < 100:
+                    totalRows = []
+                    totalTimes = []
+
+                    for i in tqdm(range(50)):
+                        N,sigma,time,newRows = runonce(t,k,v,rerolls)
+                        totalRows.append(N)
+                        totalTimes.append(sum(time)/len(time))
+                    file.write(""+str(t)+","+str(k)+","+str(v)+","+str(rerolls)+","+str(sum(totalRows)/len(totalRows))+","+str(sum(totalTimes)/len(totalTimes))+"\n")
+
+                else:
+                    totalRows = []
+                    totalTimes = []
+                    for i in tqdm(range(10)):
+                        N,sigma,time,newRows = runonce(t,k,v,rerolls)
+                        totalRows.append(N)
+                        totalTimes.append(sum(time)/len(time))
+                    file.write(""+str(t)+","+str(k)+","+str(v)+","+str(rerolls)+","+str(sum(totalRows)/len(totalRows))+","+str(sum(totalTimes)/len(totalTimes))+"\n")
+
+            else:
+                totalRows = []
+                totalTimes = []
+
+                for i in tqdm(range(30)):
+                    N,sigma,time,newRows = runonce(t,k,v,500)
+                    totalRows.append(N)
+                    totalTimes.append(sum(time)/len(time))
+                file.write(""+str(t)+","+str(k)+","+str(v)+","+str(rerolls)+","+str(sum(totalRows)/len(totalRows))+","+str(sum(totalTimes)/len(totalTimes))+"\n")
 
 
     file.close()
